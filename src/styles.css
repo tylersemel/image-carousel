@@ -17,6 +17,11 @@ body {
   max-width: 100%;
 }
 
+img {
+  padding: 0;
+  margin: 0;
+}
+
 header {
   background-color: aliceblue;
   width: 100vw;
@@ -36,17 +41,23 @@ header {
   width: 8000px;
   height: 400px;
   position: fixed;
+
+  display: flex;
+  flex-direction: row;
+  /* transform: translateX(-500px); */
 }
 
 .slide {
   width: 500px;
   height: 100%;
+  visibility: hidden;
 }
 
-.slide.visible {
+.slide.visible img {
   visibility: visible;
 }
-
-.slide:not(.slide.visible) {
+.slide img {
+  width: 500px;
+  height: 100%;
   visibility: hidden;
 }
