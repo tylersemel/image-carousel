@@ -1,3 +1,3 @@
-# template
+# Image Carousel
 
-Template repo using Webpack
+Image carousel to display moving images on a site.
