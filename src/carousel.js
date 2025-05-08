@@ -1,36 +1,86 @@
+export const Carousel = (() => {
+    const carouselElement = document.querySelector('.carousel');
+    const slideELements = carouselElement.querySelectorAll('.slide');
+    const circleElements = document.querySelectorAll('.circle');
+    const leftBtn = document.querySelector('.left');
+    const rightBtn = document.querySelector('.right');
 
-const carouselElement = document.querySelector('.carousel');
-const slideELements = carouselElement.querySelectorAll('.slide');
+    let currentSlideIdx = 0;
+    const distance = 500;
 
-slideELements[0].classList.toggle('visible');
+    leftBtn.addEventListener('click', () => {
+        previous(distance);
+    });
 
-function next(distance, currentSlideIdx) {
-    if (currentSlideIdx == slideELements.length - 1) {
-        return currentSlideIdx;
+    rightBtn.addEventListener('click', () => {
+        next(distance);
+    });
+
+    function setUp() {
+        for (let i = 0; i < circleElements.length; i++) {
+            circleElements[i].setAttribute('data-idx', i);
+            circleElements[i].addEventListener('click', handleCircleClick);
+        }
+        
+        slideELements[0].classList.toggle('visible');
+        circleElements[0].classList.toggle('on');
     }
-    console.log(currentSlideIdx);
-    slideELements[currentSlideIdx].classList.toggle('visible');
-    slideELements[currentSlideIdx + 1].classList.toggle('visible');
-    const moveDistance = distance * (currentSlideIdx + 1);
-    console.log(moveDistance);
-    carouselElement.style.transform = `translateX(-${moveDistance}px)`;
 
-    return currentSlideIdx + 1;
-}
+    setUp();
 
-function previous(distance, currentSlideIdx) {
-    if (currentSlideIdx == 0) {
-        return currentSlideIdx;
+    function handleCircleClick(event) {
+        const circleElementIdx = event.target.getAttribute('data-idx');
+        
+        if (circleElementIdx == currentSlideIdx) {
+            return;
+        }
+
+        if (circleElementIdx > currentSlideIdx) {
+            for (let i = currentSlideIdx; i < circleElementIdx; i++) {
+                next(distance);
+            }
+        }
+
+        if (circleElementIdx < currentSlideIdx) {
+            for (let i = currentSlideIdx; i > circleElementIdx; i--) {
+                previous(distance);
+            }
+        }
     }
 
-    console.log(carouselElement.getBoundingClientRect().left);
+    function next(distance) {
+        if (currentSlideIdx == slideELements.length - 1) {
+            return;
+        }
 
-    slideELements[currentSlideIdx].classList.toggle('visible');
-    slideELements[currentSlideIdx - 1].classList.toggle('visible');
-    const moveDistance = distance * (currentSlideIdx - 1);
-    carouselElement.style.transform = `translateX(-${moveDistance}px)`;
+        slideELements[currentSlideIdx].classList.toggle('visible');
+        slideELements[currentSlideIdx + 1].classList.toggle('visible');
+        
+        const moveDistance = distance * (currentSlideIdx + 1);
+        carouselElement.style.transform = `translateX(-${moveDistance}px)`;
 
-    return currentSlideIdx - 1;
-}
+        setCircleStyle(currentSlideIdx + 1, currentSlideIdx);
 
-export {next, previous};
+        currentSlideIdx++;
+    }
+
+    function previous(distance) {
+        if (currentSlideIdx == 0) {
+            return;
+        }
+
+        slideELements[currentSlideIdx].classList.toggle('visible');
+        slideELements[currentSlideIdx - 1].classList.toggle('visible');
+        const moveDistance = distance * (currentSlideIdx - 1);
+        carouselElement.style.transform = `translateX(-${moveDistance}px)`;
+
+        setCircleStyle(currentSlideIdx - 1, currentSlideIdx);
+
+        currentSlideIdx--;
+    }
+
+    function setCircleStyle(prevIdx, currentSlideIdx) {
+        circleElements[prevIdx].classList.toggle('on');
+        circleElements[currentSlideIdx].classList.toggle('on');
+    }
+});
