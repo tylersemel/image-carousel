@@ -1,12 +1,13 @@
 export const Carousel = (() => {
     const carouselElement = document.querySelector('.carousel');
-    const slideELements = carouselElement.querySelectorAll('.slide');
+    const slideElements = carouselElement.querySelectorAll('.slide');
     const circleElements = document.querySelectorAll('.circle');
     const leftBtn = document.querySelector('.left');
     const rightBtn = document.querySelector('.right');
 
     let currentSlideIdx = 0;
     const distance = 500;
+    let timer = window.setInterval(timeSlideshow, 5000);
 
     leftBtn.addEventListener('click', () => {
         previous(distance);
@@ -22,8 +23,8 @@ export const Carousel = (() => {
             circleElements[i].addEventListener('click', handleCircleClick);
         }
         
-        slideELements[0].classList.toggle('visible');
-        circleElements[0].classList.toggle('on');
+        slideElements[0].classList.toggle('visible');
+        circleElements[0].classList.toggle('on');    
     }
 
     setUp();
@@ -49,12 +50,12 @@ export const Carousel = (() => {
     }
 
     function next(distance) {
-        if (currentSlideIdx == slideELements.length - 1) {
+        if (currentSlideIdx == slideElements.length - 1) {
             return;
         }
 
-        slideELements[currentSlideIdx].classList.toggle('visible');
-        slideELements[currentSlideIdx + 1].classList.toggle('visible');
+        slideElements[currentSlideIdx].classList.toggle('visible');
+        slideElements[currentSlideIdx + 1].classList.toggle('visible');
         
         const moveDistance = distance * (currentSlideIdx + 1);
         carouselElement.style.transform = `translateX(-${moveDistance}px)`;
@@ -62,6 +63,9 @@ export const Carousel = (() => {
         setCircleStyle(currentSlideIdx + 1, currentSlideIdx);
 
         currentSlideIdx++;
+
+        window.clearInterval(timer);
+        timer = window.setInterval(timeSlideshow, 5000);
     }
 
     function previous(distance) {
@@ -69,18 +73,33 @@ export const Carousel = (() => {
             return;
         }
 
-        slideELements[currentSlideIdx].classList.toggle('visible');
-        slideELements[currentSlideIdx - 1].classList.toggle('visible');
+        slideElements[currentSlideIdx].classList.toggle('visible');
+        slideElements[currentSlideIdx - 1].classList.toggle('visible');
         const moveDistance = distance * (currentSlideIdx - 1);
         carouselElement.style.transform = `translateX(-${moveDistance}px)`;
 
         setCircleStyle(currentSlideIdx - 1, currentSlideIdx);
 
         currentSlideIdx--;
+
+        window.clearInterval(timer);
+        timer = window.setInterval(timeSlideshow, 5000);
     }
 
     function setCircleStyle(prevIdx, currentSlideIdx) {
         circleElements[prevIdx].classList.toggle('on');
         circleElements[currentSlideIdx].classList.toggle('on');
     }
+
+    function timeSlideshow() {
+        if (currentSlideIdx != slideElements.length - 1) {
+            next(distance);
+        }
+        else {
+            for (let i = 0; i < slideElements.length; i++) {
+                previous(distance);
+            }
+        }
+    }
+    
 });
