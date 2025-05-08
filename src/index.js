@@ -1,15 +1,17 @@
 import "./styles.css";
 import {next, previous} from './carousel.js';
 
+const leftBtn = document.querySelector('.left');
+const rightBtn = document.querySelector('.right');
 
-if (process.env.NODE_ENV !== "production") {
-  console.log("Looks like we are in development mode!");
-}
+let currentSlideIdx = 0;
 
-console.log("I'm working!");
+const distance = 500;
 
+leftBtn.addEventListener('click', () => {
+  currentSlideIdx = previous(distance, currentSlideIdx);
+});
 
-next(500, 0);
-next(500, 1);
-previous(500, 2);
-previous(500, 1);
+rightBtn.addEventListener('click', () => {
+  currentSlideIdx = next(distance, currentSlideIdx);
+});
